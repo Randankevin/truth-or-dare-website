@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,6 +164,87 @@
             color: #ff6b6b;
             text-shadow: 0 0 5px rgba(255,107,107,0.3);
         }
+
+        .category-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 1rem;
+            border: 2px solid #444;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #2a2a2a;
+            color: #cccccc;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            border-color: #666;
+        }
+
+        .category-btn.normal {
+            border-color: #4CAF50;
+            color: #81C784;
+        }
+
+        .category-btn.normal.active {
+            background: #1b5e20;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .category-btn.couples {
+            border-color: #E91E63;
+            color: #F06292;
+        }
+
+        .category-btn.couples.active {
+            background: #880E4F;
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.5);
+        }
+
+        .category-btn.gang {
+            border-color: #FF9800;
+            color: #FFB74D;
+        }
+
+        .category-btn.gang.active {
+            background: #E65100;
+            box-shadow: 0 0 20px rgba(255, 152, 0, 0.5);
+        }
+
+        .category-btn.spicy {
+            border-color: #FF1744;
+            color: #FF5252;
+        }
+
+        .category-btn.spicy.active {
+            background: #B71C1C;
+            box-shadow: 0 0 20px rgba(255, 23, 68, 0.5);
+        }
+
+        .game-section {
+            display: none;
+        }
+
+        .game-section.active {
+            display: block;
+        }
+
+        .category-section {
+            display: block;
+        }
+
+        .category-section.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -170,7 +252,27 @@
         <h1 class="title">🔥 Truth or Dare 🔥</h1>
         <p class="subtitle">Dare to reveal your darkest secrets... if you can handle the truth!</p>
         
-        <div class="players-section">
+        <!-- Category Selection -->
+        <div class="category-section" id="categorySection">
+            <p style="color: #cccccc; margin-bottom: 1.5rem; font-size: 1.1rem;">Select a Category:</p>
+            <div class="category-selection">
+                <button class="category-btn normal" onclick="selectCategory('normal')">
+                    😊 Normal
+                </button>
+                <button class="category-btn couples" onclick="selectCategory('couples')">
+                    💑 Couples
+                </button>
+                <button class="category-btn gang" onclick="selectCategory('gang')">
+                    🔥 Gang
+                </button>
+                <button class="category-btn spicy" onclick="selectCategory('spicy')">
+                    🌶️ Spicy
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Section -->
+        <div class="game-section" id="gameSection">
             <div class="current-player">
                 Current Player: <span class="player-name" id="currentPlayer">Click to start!</span>
             </div>
@@ -196,6 +298,12 @@
             Next Player →
         </button>
 
+        <button class="next-btn" onclick="backToCategories()" style="margin-top: 1rem; background: linear-gradient(135deg, #333333, #555555); display: none;" id="backBtn">
+            ← Back to Categories
+        </button>
+        </div>
+        <!-- End Game Section -->
+
         <div style="margin-top: 2rem; padding: 0.5rem; background: #2a2a2a; border-radius: 10px; border: 1px solid #444; color: #aaa; text-align: center; font-size: 0.85em; opacity: 0.6;">
             <strong style="font-size:0.95em;">Created by Randan Kevin</strong><br>
             <span style="font-size:0.8em;">
@@ -208,49 +316,207 @@
     <script>
         const players = ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6'];
         let currentPlayerIndex = 0;
+        let currentCategory = null;
         
-        const truths = [
-            "What's the most embarrassing thing you've done in public?",
-            "Who was your first crush and why?",
-            "What's a secret you've never told anyone?",
-            "What's the weirdest food combination you actually enjoy?",
-            "If you could read minds for a day, whose would you read first?",
-            "What's the most childish thing you still do?",
-            "What's your most irrational fear?",
-            "Who in this room would you trust with your biggest secret?",
-            "What's the worst lie you've ever told?",
-            "What's something you're glad your parents don't know about you?",
-            "If you had to delete one app from your phone, which would be the hardest to give up?",
-            "What's the most trouble you've ever been in?",
-            "Who do you think is the most attractive person in this room?",
-            "What's your biggest pet peeve about people?",
-            "If you could switch lives with someone for a day, who would it be?"
-        ];
+        const categories = {
+            normal: {
+                truths: [
+                    "What's the most embarrassing thing you've done in public?",
+                    "Who was your first crush and why?",
+                    "What's a secret you've never told anyone?",
+                    "What's the weirdest food combination you actually enjoy?",
+                    "If you could read minds for a day, whose would you read first?",
+                    "What's the most childish thing you still do?",
+                    "What's your most irrational fear?",
+                    "Who in this room would you trust with your biggest secret?",
+                    "What's the worst lie you've ever told?",
+                    "What's something you're glad your parents don't know about you?",
+                    "If you had to delete one app from your phone, which would be the hardest to give up?",
+                    "What's the most trouble you've ever been in?",
+                    "Who do you think is the most attractive person in this room?",
+                    "What's your biggest pet peeve about people?",
+                    "If you could switch lives with someone for a day, who would it be?"
+                ],
+                dares: [
+                    "Do your best impression of someone in the room (others guess who).",
+                    "Sing the chorus of your favorite song out loud.",
+                    "Do 10 push-ups right now.",
+                    "Call a random contact and sing 'Happy Birthday' to them.",
+                    "Dance with no music for 30 seconds.",
+                    "Let someone else post a status on your social media.",
+                    "Eat a spoonful of a condiment of the group's choosing.",
+                    "Do your best runway model walk across the room.",
+                    "Speak in an accent of the group's choice for the next 3 rounds.",
+                    "Do a cartwheel (or attempt one).",
+                    "Let the group give you a new hairstyle using just their hands.",
+                    "Pretend to be a food item and have others guess what you are.",
+                    "Do jumping jacks until it's your turn again.",
+                    "Make up a 30-second commercial for a random object in the room.",
+                    "Draw a portrait of someone in the room using only your non-dominant hand."
+                ]
+            },
+            couples: {
+                truths: [
+                    "What's your favorite memory together?",
+                    "When did you know they were the one?",
+                    "What's something you love about them that nobody else knows?",
+                    "Describe your ideal date night together.",
+                    "What's a funny moment you've shared that still makes you laugh?",
+                    "What's something your partner does that drives you crazy (in a good way)?",
+                    "What's your favorite thing about their personality?",
+                    "When was the moment you first fell in love with them?",
+                    "What's something you've never told your partner about your feelings?",
+                    "What's the sweetest thing they've ever done for you?",
+                    "How do you know they're your soulmate?",
+                    "What's your favorite inside joke between you two?",
+                    "Describe them in three words.",
+                    "What's something you hope to experience together in the future?",
+                    "What makes your relationship special compared to others?"
+                ],
+                dares: [
+                    "Give your partner a 10-second massage.",
+                    "Kiss for 5 seconds without laughing.",
+                    "Hold hands and gaze into each other's eyes for 30 seconds.",
+                    "Whisper something sweet in their ear.",
+                    "Do a slow dance together right now.",
+                    "Feed each other a bite of food.",
+                    "Create a silly dance together and perform it.",
+                    "Tell your partner three things you love about them.",
+                    "Hug each other for 20 seconds without letting go.",
+                    "Give your partner a compliment in front of everyone.",
+                    "Draw a picture of your partner blindfolded.",
+                    "Let your partner put makeup on you.",
+                    "Slow dance to the song of their choice.",
+                    "Write and read a love note to your partner.",
+                    "Recreate your first kiss moment."
+                ]
+            },
+            gang: {
+                truths: [
+                    "What's the craziest thing you've ever done?",
+                    "Have you ever gotten away with something you shouldn't have?",
+                    "What's your wildest party story?",
+                    "What's something illegal you've thought about doing?",
+                    "What's the most reckless decision you've ever made?",
+                    "Have you ever lied to get out of serious trouble?",
+                    "What's the most scandalous secret you know about someone?",
+                    "Have you ever done something you're genuinely ashamed of?",
+                    "What's the worst fight you've ever been in or witnessed?",
+                    "What substance have you tried that you've never told your family about?",
+                    "What's the most aggressive thing you've said to someone?",
+                    "Have you ever betrayed someone's trust in a major way?",
+                    "What's your most controversial opinion?",
+                    "What's the darkest thought you've ever had?",
+                    "What's something you do that would shock everyone who knows you?"
+                ],
+                dares: [
+                    "Chug a drink in one go.",
+                    "Do shots with the group.",
+                    "Tell someone in the room exactly what you think of them (brutally honest).",
+                    "Prank call someone from the group's phone.",
+                    "Go outside and yell something crazy at the top of your lungs.",
+                    "Dance on a table or chair.",
+                    "Let the group dare you to do something else.",
+                    "Take the spiciest shot or bite the hottest pepper available.",
+                    "Post something embarrassing on your social media (then delete it).",
+                    "Do 30 seconds of the most ridiculous dance moves ever.",
+                    "Confess your worst habit to the group.",
+                    "Get down and do pushups until failure.",
+                    "Let someone cut a small piece of your hair (or pretend to).",
+                    "Spin around 10 times and try to walk straight.",
+                    "Make a crazy face for a photo the group will keep."
+                ]
+            },
+            spicy: {
+                truths: [
+                    "What's your biggest sexual fantasy?",
+                    "Have you ever had a one-night stand?",
+                    "What's the longest dry spell you've had?",
+                    "What's your most embarrassing turn-on?",
+                    "Have you ever been caught in a compromising situation?",
+                    "What's something you'd like to try but are too shy to ask for?",
+                    "What's the craziest place you've ever done it?",
+                    "Do you prefer rough or gentle intimacy?",
+                    "What's a kink you're curious about?",
+                    "Have you ever faked it?",
+                    "What's your biggest insecurity in the bedroom?",
+                    "What's something you find sexy that most people might not?",
+                    "Have you ever been attracted to someone you shouldn't have been?",
+                    "What's your wildest sexual experience?",
+                    "What body part of your partner do you find most attractive?"
+                ],
+                dares: [
+                    "Whisper something dirty to the person next to you.",
+                    "Do a seductive dance for 15 seconds.",
+                    "Let someone kiss your neck for 3 seconds.",
+                    "Rate everyone in the room 1-10 (attractiveness) honestly.",
+                    "Take a sensual selfie and show the group.",
+                    "Let someone blindfold you and touch your face.",
+                    "Straddle someone platonically for a photo.",
+                    "Describe your ideal hookup scenario to the group.",
+                    "Let the group ask you one extremely personal question and answer honestly.",
+                    "Give someone a body massage for 30 seconds.",
+                    "Text your crush something flirty right now.",
+                    "Do a pole dance impression on a chair or pole.",
+                    "Let someone sit on your lap for 1 minute.",
+                    "Rate the attractiveness of someone in the room in detail.",
+                    "Describe your most attractive feature to the group."
+                ]
+            }
+        };
         
-        const dares = [
-            "Do your best impression of someone in the room (others guess who).",
-            "Sing the chorus of your favorite song out loud.",
-            "Do 10 push-ups right now.",
-            "Call a random contact and sing 'Happy Birthday' to them.",
-            "Dance with no music for 30 seconds.",
-            "Let someone else post a status on your social media.",
-            "Eat a spoonful of a condiment of the group's choosing.",
-            "Do your best runway model walk across the room.",
-            "Speak in an accent of the group's choice for the next 3 rounds.",
-            "Do a cartwheel (or attempt one).",
-            "Let the group give you a new hairstyle using just their hands.",
-            "Pretend to be a food item and have others guess what you are.",
-            "Do jumping jacks until it's your turn again.",
-            "Make up a 30-second commercial for a random object in the room.",
-            "Draw a portrait of someone in the room using only your non-dominant hand.",
-            "Go jerk off ya homeboy.",
-            "Post 'TUTAM' on your IG.", 
-            "Send a risky text to your crush.",
+        function selectCategory(category) {
+            currentCategory = category;
+            
+            // Hide category section and show game section
+            document.getElementById('categorySection').classList.add('hidden');
+            document.getElementById('gameSection').classList.add('active');
+            
+            // Mark button as active
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Setup the game UI in the game section
+            setupGameUI();
+            updateCurrentPlayer();
+        }
         
-        ];
+        function setupGameUI() {
+            const gameSection = document.getElementById('gameSection');
+            gameSection.innerHTML = `
+                <div class="players-section">
+                    <div class="current-player">
+                        Current Player: <span class="player-name" id="currentPlayer">Click to start!</span>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button class="game-button truth-btn" onclick="getChallenge('truth')">
+                        🩸 Truth
+                    </button>
+                    <button class="game-button dare-btn" onclick="getChallenge('dare')">
+                        💀 Dare
+                    </button>
+                </div>
+                
+                <div class="challenge-card" id="challengeCard">
+                    <div>
+                        <div class="challenge-type" id="challengeType"></div>
+                        <div id="challengeText">Choose Truth or Dare to begin the fun!</div>
+                    </div>
+                </div>
+                
+                <button class="next-btn" onclick="nextPlayer()" id="nextBtn" style="display: none;">
+                    Next Player →
+                </button>
+            `;
+        }
         
         function updateCurrentPlayer() {
-            document.getElementById('currentPlayer').textContent = players[currentPlayerIndex];
+            const player = document.getElementById('currentPlayer');
+            if (player) {
+                player.textContent = players[currentPlayerIndex];
+            }
         }
         
         function getChallenge(type) {
@@ -259,13 +525,15 @@
             const challengeText = document.getElementById('challengeText');
             const nextBtn = document.getElementById('nextBtn');
             
+            const categoryData = categories[currentCategory];
             let challenge;
+            
             if (type === 'truth') {
-                challenge = truths[Math.floor(Math.random() * truths.length)];
+                challenge = categoryData.truths[Math.floor(Math.random() * categoryData.truths.length)];
                 challengeType.textContent = '🩸 Truth';
                 challengeCard.style.background = 'linear-gradient(135deg, #8b0000, #2d0000)';
             } else {
-                challenge = dares[Math.floor(Math.random() * dares.length)];
+                challenge = categoryData.dares[Math.floor(Math.random() * categoryData.dares.length)];
                 challengeType.textContent = '💀 Dare';
                 challengeCard.style.background = 'linear-gradient(135deg, #4b0082, #1a0033)';
             }
@@ -293,8 +561,13 @@
             }, 300);
         }
         
-        // Initialize the game
-        updateCurrentPlayer();
+        function backToCategories() {
+            currentCategory = null;
+            currentPlayerIndex = 0;
+            document.getElementById('categorySection').classList.remove('hidden');
+            document.getElementById('gameSection').classList.remove('active');
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        }
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98bdff00d0f24914',t:'MTc2MDAxNDE0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
