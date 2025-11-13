@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -277,39 +279,38 @@
             </div>
         </div>
         
-        <div class="button-container">
-            <button class="game-button truth-btn" onclick="getChallenge('truth')">
-                🩸 Truth
-            </button>
-            <button class="game-button dare-btn" onclick="getChallenge('dare')">
-                💀 Dare
-            </button>
-        </div>
-
-        <div style="margin-top: 2rem; padding: 0.5rem; background: #2a2a2a; border-radius: 10px; border: 1px solid #444; color: #aaa; text-align: center; font-size: 0.85em; opacity: 0.6;">
-            <strong style="font-size:0.95em;">Created by Randan Kevin</strong><br>
-            <span style="font-size:0.8em;">
-                Email: <a href="mailto:randankevin@zetech.ac.ke" style="color:#aaa; text-decoration:none;">randankevin@zetech.ac.ke</a><br>
-                Phone: <a href="tel:+254708063827" style="color:#aaa; text-decoration:none;">+254 708 063 827</a>
-            </span>
-        </div>
-        
-        <div class="challenge-card" id="challengeCard">
-            <div>
-                <div class="challenge-type" id="challengeType"></div>
-                <div id="challengeText">Choose Truth or Dare to begin the fun!</div>
+            <div class="players-section">
+                <div class="current-player">
+                    Current Player: <span class="player-name" id="currentPlayer">Click to start!</span>
+                </div>
+                
+                <button class="game-button truth-btn" onclick="getChallenge('truth')">
+                    🩸 Truth
+                </button>
+                <button class="game-button dare-btn" onclick="getChallenge('dare')">
+                    💀 Dare
+                </button>
             </div>
-        </div>
-        
+            <div style="margin-top: 2rem; padding: 0.5rem; background: #2a2a2a; border-radius: 10px; border: 1px solid #444; color: #aaa; text-align: center; font-size: 0.85em; opacity: 0.6;">
+                <strong style="font-size:0.95em;">Created by Randan Kevin</strong><br>
+                <span style="font-size:0.8em;">
+                    Email: <a href="mailto:randankevin@zetech.ac.ke" style="color:#aaa; text-decoration:none;">randankevin@zetech.ac.ke</a><br>
+                    Phone: <a href="tel:+254708063827" style="color:#aaa; text-decoration:none;">+254 708 063 827</a>
+                </span>
+            </div>
+            <div class="challenge-card" id="challengeCard">
+                <div>
+                    <div class="challenge-type" id="challengeType"></div>
+                    <div id="challengeText">Choose Truth or Dare to begin the fun!</div>
+                </div>
         <button class="next-btn" onclick="nextPlayer()" id="nextBtn" style="display: none;">
-            Next Player →
         </button>
-
-        <button class="next-btn" onclick="backToCategories()" style="margin-top: 1rem; background: linear-gradient(135deg, #333333, #555555); display: none;" id="backBtn">
-            ← Back to Categories
-        </button>
-        </div>
-        <!-- End Game Section -->
+            <button class="next-btn" onclick="nextPlayer()" id="nextBtn" style="display: none;">
+                Next Player →
+            </button>
+            <button class="next-btn" onclick="backToCategories()" style="margin-top: 1rem; background: linear-gradient(135deg, #333333, #555555); display: none;" id="backBtn">
+                ← Back to Categories
+            </button>
     </div>
 
     <script>
@@ -482,33 +483,7 @@
         
         function setupGameUI() {
             const gameSection = document.getElementById('gameSection');
-            gameSection.innerHTML = `
-                <div class="players-section">
-                    <div class="current-player">
-                        Current Player: <span class="player-name" id="currentPlayer">Click to start!</span>
-                    </div>
-                </div>
-                
-                <div class="button-container">
-                    <button class="game-button truth-btn" onclick="getChallenge('truth')">
-                        🩸 Truth
-                    </button>
-                    <button class="game-button dare-btn" onclick="getChallenge('dare')">
-                        💀 Dare
-                    </button>
-                </div>
-                
-                <div class="challenge-card" id="challengeCard">
-                    <div>
-                        <div class="challenge-type" id="challengeType"></div>
-                        <div id="challengeText">Choose Truth or Dare to begin the fun!</div>
-                    </div>
-                </div>
-                
-                <button class="next-btn" onclick="nextPlayer()" id="nextBtn" style="display: none;">
-                    Next Player →
-                </button>
-            `;
+            gameSection.style.display = 'block';
         }
         
         function updateCurrentPlayer() {
